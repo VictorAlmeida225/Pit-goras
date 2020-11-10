@@ -7,10 +7,10 @@
 body{
     background-color: #d8d8d8 !important;
 }
-input[type=number]::-webkit-inner-spin-button { 
+input[type=number]::-webkit-inner-spin-button{ 
     -webkit-appearance: none;
 }
-input[type=number] { 
+input[type=number]{ 
     -moz-appearance: textfield;
     appearance: textfield;
     width: 100%;
@@ -18,10 +18,10 @@ input[type=number] {
 .container{
     margin: 25px auto 25px auto !important;
 }
-.row:not(:nth-child(3)){
+.RowInp{
     border-bottom: 1px dotted #555555;
 }
-.row:nth-child(2){
+div .row:nth-child(2){
     margin-top: 15px;
 }
 .buttonbtn{
@@ -32,4 +32,30 @@ input[type=number] {
 }
 .SubCol .buttonbtn{
     float: right;
+}
+@media (max-width: 767px){
+    input[type=number]{ 
+        margin-bottom: 10px;
+    }
+}
+@media (min-width: 767px) and (max-width: 990px){
+    .SCol{
+        display: flex;
+        align-items: center;
+    }
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: red;
+  opacity: 0.85; /* Firefox */
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: red;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: red;
+}
+#respostas-container{
+    margin: 20px;
+    text-align: center;
+    width: 100%;
 }
