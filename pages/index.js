@@ -57,6 +57,8 @@ function Respostas() {
             <h4 id="resp6"></h4>
             <h4 id="resp7"></h4>
             <h4 id="resp8"></h4>
+            <h4 id="resp9"></h4>
+            <h4 id="resp10"></h4>
         </div>
     )
 }
@@ -99,6 +101,20 @@ function MudarLabelHyp() {
 function MudarLabelCat(){
     document.getElementById('lbl1').innerHTML = 'Hipotenusa:';
     document.getElementById('lbl2').innerHTML = 'Cateto:';
+}
+
+function Fatorar(nr) {
+    var partes = [];
+    while (nr > 1) {
+        for (var i = 2; i <= nr; i++) {
+            if (nr % i) continue;
+            partes.push([nr, i]);
+            nr = nr / i;
+            break;
+        }
+    }
+    partes.push([1, '/']);
+    return partes;
 }
 
 function Calculate() {
@@ -167,8 +183,65 @@ function Calculate() {
             document.getElementById('resp6').innerHTML = 'C = √' + subtração;
 
             if (Math.sqrt(subtração) % 1 !== 0) {
-                console.log(Fatorar(Math.sqrt(subtração)))
-            } else {
+                var tabela = Fatorar(subtração);
+                var numerosprimos = [];
+                for (var i = 0; i < tabela.length; i++) {
+                    numerosprimos.push(tabela[i][1])
+                }
+
+                var NúmerosDiferentes = new Set(numerosprimos);
+                var NDArray = [...NúmerosDiferentes];
+                var NDArrayCut = NDArray.pop();
+                var numerosprimosCut = numerosprimos.pop();
+                console.log(NDArray)
+                
+
+                var total = 0;
+                var inutil = 0;
+                var inutil2 = 0;
+                var numerorepitidos = [];
+                var numeroantes = [];
+                var numerodepois = [];
+
+                for (var x = 0; x < NDArray.length; x++){
+                    for (var z = 0; z < numerosprimos.length; z++){
+                        var test = numerosprimos[z]
+                        var test2 = numerosprimos[z-1] 
+                        if (test == NDArray[x] & test == test2) {
+                            inutil++
+                            inutil2 = NDArray[x]
+                        }
+                        else if (test == NDArray[x]){
+                            inutil = 1
+                            inutil2 = NDArray[x]
+                        }
+                    }
+                    numerorepitidos.push([inutil2, inutil])
+                }
+
+                for (var y = 0; y < numerorepitidos.length; y++) {
+                    var conferidor = numerorepitidos[y][1];
+                    if ((conferidor & 1) & conferidor == 1) {
+                        numerodepois.push(numerorepitidos[y][0]);
+                    }
+                    else if (conferidor & 1) {
+                        numerodepois.push(numerorepitidos[y][0]);
+                        numeroantes.push(total = Math.pow(numerorepitidos[y][0], ((conferidor - 1) / 2)));
+                    } 
+                    else {
+                        numeroantes.push(total = Math.pow(numerorepitidos[y][0], (conferidor / 2)));
+                    }
+                }
+
+                var foradaraiz = multiplicatodooarray(numeroantes)
+                var dentrodaraiz = multiplicatodooarray(numerodepois)
+                console.log(foradaraiz)
+                console.log(dentrodaraiz)
+                console.log(numerorepitidos)
+                console.log(numerosprimos)
+                console.log(tabela)
+            }
+            else {
                 // $('#resposta-container').append('<h3> A = ' + c + '</h3>');
                 document.getElementById('resp7').innerHTML = 'C = ' + Math.sqrt(subtração);
 
@@ -177,19 +250,7 @@ function Calculate() {
         }
     }
 }
-function Fatorar(nr) {
-    var partes = [];
-    while (nr > 1) {
-        for (var i = 2; i <= nr; i++) {
-            if (nr % i) continue;
-            partes.push([nr, i]);
-            nr = nr / i;
-            break;
-        }
-    }
-    partes.push([1, '']);
-    return partes;
-}
 
+const multiplicatodooarray = (itens) => itens.reduce((acumulador, item) => acumulador * item);
 
 export default App
