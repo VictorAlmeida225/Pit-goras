@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Button, Col, Row, Container, Modal } from 'react-bootstrap';
+import { Button, Col, Row, Container, Table, Modal, Navbar } from 'react-bootstrap';
 
 class ToggleButtons extends React.Component {
     state = {
@@ -70,22 +70,34 @@ function App() {
                 <title>Teorema de Pitágoras</title>
                 <link rel="shortcut icon" href="https://image.winudf.com/v2/image1/Y29tLmluaXR6ZXJfZGV2LnRlb3JlbWFQaXRhZ29yYXNfaWNvbl8xNTQxMTAxMDU5XzA0Ng/icon.png?w=170&fakeurl=1" type="image/x-icon"/>
             </Helmet>
+            <Navbar bg="dark" variant="dark">
+                <Navbar.Brand href="#home">
+                    <img
+                        alt="Logo"
+                        src="https://image.winudf.com/v2/image1/Y29tLmluaXR6ZXJfZGV2LnRlb3JlbWFQaXRhZ29yYXNfaWNvbl8xNTQxMTAxMDU5XzA0Ng/icon.png?w=170&fakeurl=1"
+                        width="30"
+                        height="30"
+                        className="d-inline-block align-top"
+                    />{' '}
+                    Teorema de Pitágoras
+                </Navbar.Brand>
+            </Navbar>
             <Container>
                 <Row className="RowInp">
-                    <Col xs={6} md={4}><h3 id="lbl1">Primeiro Cateto:</h3></Col>
-                    <Col xs={12} md={8}><input type="number" id="Num1"/></Col>
+                    <Col sm={12} xs={6} md={4}><h3 id="lbl1">Primeiro Cateto:</h3></Col>
+                    <Col sm={12} xs={12} md={8}><input type="number" id="Num1"/></Col>
                 </Row>
                 <Row className="RowInp">
-                    <Col xs={6} md={4}><h3 id="lbl2">Segundo Cateto:</h3></Col>
-                    <Col className="SCol" xs={12} md={8}><input type="number" id="Num2"/></Col>
+                    <Col sm={12} xs={6} md={4}><h3 id="lbl2">Segundo Cateto:</h3></Col>
+                    <Col className="SCol" sm ={12} xs={12} md={8}><input type="number" id="Num2"/></Col>
                 </Row>
                 <Row>
                     <Col className="TogCol"><ToggleButtons /></Col>
                     <Col className="SubCol"><ButtonSubmit /></Col>
                 </Row>
                 <Row>
-                    <Respostas/>
-                    <table id="fatora"></table>
+                    <Col sm={12}><Respostas /></Col>
+                    <Col sm={12} id="Col-resp"></Col>
                 </Row>
             </Container>
         </div>
@@ -103,6 +115,25 @@ function MudarLabelCat(){
     document.getElementById('lbl2').innerHTML = 'Cateto:';
 }
 
+function gerarTabela(ftrs) {
+    var gerartable = document.createElement('Table');
+    for (var i = 0; i < ftrs.length; i++) {
+        var f = ftrs[i];
+        var linha = document.createElement('tr');
+        var elementoLinha1 = document.createElement('td');
+        var elementoLinha2 = document.createElement('td');
+        var texto1 = document.createTextNode(f[0]);
+        var texto2 = document.createTextNode(f[1]);
+        elementoLinha1.appendChild(texto1);
+        elementoLinha2.appendChild(texto2);
+        linha.appendChild(elementoLinha1);
+        linha.appendChild(elementoLinha2);
+        gerartable.append(linha);
+    }
+    var columnresp = document.getElementById('Col-resp');
+    columnresp.append(gerartable);
+}
+
 function Fatorar(nr) {
     var partes = [];
     while (nr > 1) {
@@ -113,7 +144,7 @@ function Fatorar(nr) {
             break;
         }
     }
-    partes.push([1, '/']);
+    partes.push([1, '']);
     return partes;
 }
 
@@ -153,10 +184,89 @@ function Calculate() {
             // $('#resposta-container').append('<h4>A = √' + soma + '</h4>');
             document.getElementById('resp5').innerHTML = 'A = √' + soma;
 
-            // $('#resposta-container').append('<h3> A = ' + h + '</h3>');
-            document.getElementById('resp6').innerHTML = 'A = ' + Math.sqrt(soma);
+            if (Math.sqrt(soma) % 1 !== 0) {
+                var columnresp = document.getElementById('Col-resp');
+                if (columnresp.hasChildNodes()) {
+                    var elemento = document.getElementById('Col-resp');
+                    while (elemento.firstChild) {
+                        elemento.removeChild(elemento.firstChild);
+                    }
+                }
+                var tabela = Fatorar(soma);
+                gerarTabela(tabela);
+                var numerosprimos = [];
+                for (var i = 0; i < tabela.length; i++) {
+                    numerosprimos.push(tabela[i][1])
+                }
 
-            document.getElementById('resp7').innerHTML = 'A Hipotenusa é igual a ' + Math.sqrt(soma);
+                var NúmerosDiferentes = new Set(numerosprimos);
+                var NDArray = [...NúmerosDiferentes];
+                var NDArrayCut = NDArray.pop();
+                var numerosprimosCut = numerosprimos.pop();
+
+
+                var total = 0;
+                var inutil = 0;
+                var inutil2 = 0;
+                var numerorepitidos = [];
+                var numeroantes = [];
+                var numerodepois = [];
+
+                for (var x = 0; x < NDArray.length; x++) {
+                    for (var z = 0; z < numerosprimos.length; z++) {
+                        var test = numerosprimos[z]
+                        var test2 = numerosprimos[z - 1]
+                        if (test == NDArray[x] & test == test2) {
+                            inutil++
+                            inutil2 = NDArray[x]
+                        }
+                        else if (test == NDArray[x]) {
+                            inutil = 1
+                            inutil2 = NDArray[x]
+                        }
+                    }
+                    numerorepitidos.push([inutil2, inutil])
+                }
+
+                for (var y = 0; y < numerorepitidos.length; y++) {
+                    var conferidor = numerorepitidos[y][1];
+                    if ((conferidor & 1) & conferidor == 1) {
+                        numerodepois.push(numerorepitidos[y][0]);
+                    }
+                    else if (conferidor & 1) {
+                        numerodepois.push(numerorepitidos[y][0]);
+                        numeroantes.push(total = Math.pow(numerorepitidos[y][0], ((conferidor - 1) / 2)));
+                    }
+                    else {
+                        numeroantes.push(total = Math.pow(numerorepitidos[y][0], (conferidor / 2)));
+                    }
+                }
+
+                var foradaraiz = multiplicatodooarray(numeroantes)
+                var dentrodaraiz = multiplicatodooarray(numerodepois)
+
+                document.getElementById('resp6').innerHTML = 'C = ' + foradaraiz + '√' + dentrodaraiz;
+
+                var n = Math.sqrt(soma);
+                var numeroDefinitivo = formatarValor(n);
+
+                document.getElementById('resp7').innerHTML = 'A Hipotenusa é igual a ' + foradaraiz + '√' + dentrodaraiz + ' ou ' + numeroDefinitivo;
+            }
+            else{
+                var columnresp = document.getElementById('Col-resp');
+                if (columnresp.hasChildNodes()) {
+                    var elemento = document.getElementById('Col-resp');
+                    while (elemento.firstChild) {
+                        elemento.removeChild(elemento.firstChild);
+                    }
+                }
+                var tabela = Fatorar(soma);
+                gerarTabela(tabela);
+
+                document.getElementById('resp6').innerHTML = 'A = ' + Math.sqrt(soma);
+
+                document.getElementById('resp7').innerHTML = 'A Hipotenusa é igual a ' + Math.sqrt(soma);
+            }
         }
         else {
             document.getElementById('Num1').value = '';
@@ -183,7 +293,15 @@ function Calculate() {
             document.getElementById('resp6').innerHTML = 'C = √' + subtração;
 
             if (Math.sqrt(subtração) % 1 !== 0) {
+                var columnresp = document.getElementById('Col-resp');
+                if (columnresp.hasChildNodes()){
+                    var elemento = document.getElementById('Col-resp');
+                    while (elemento.firstChild) {
+                        elemento.removeChild(elemento.firstChild);
+                    }
+                }
                 var tabela = Fatorar(subtração);
+                gerarTabela(tabela);
                 var numerosprimos = [];
                 for (var i = 0; i < tabela.length; i++) {
                     numerosprimos.push(tabela[i][1])
@@ -193,7 +311,6 @@ function Calculate() {
                 var NDArray = [...NúmerosDiferentes];
                 var NDArrayCut = NDArray.pop();
                 var numerosprimosCut = numerosprimos.pop();
-                console.log(NDArray)
                 
 
                 var total = 0;
@@ -235,13 +352,25 @@ function Calculate() {
 
                 var foradaraiz = multiplicatodooarray(numeroantes)
                 var dentrodaraiz = multiplicatodooarray(numerodepois)
-                console.log(foradaraiz)
-                console.log(dentrodaraiz)
-                console.log(numerorepitidos)
-                console.log(numerosprimos)
-                console.log(tabela)
+
+                document.getElementById('resp7').innerHTML = 'C = ' + foradaraiz + '√' + dentrodaraiz;
+
+                var n = Math.sqrt(subtração);
+                var numeroDefinitivo = formatarValor(n);
+
+                document.getElementById('resp8').innerHTML = 'O outro Cateto é igual a ' + foradaraiz + '√' + dentrodaraiz + ' ou ' + numeroDefinitivo;
             }
             else {
+                var columnresp = document.getElementById('Col-resp');
+                if (columnresp.hasChildNodes()) {
+                    var elemento = document.getElementById('Col-resp');
+                    while (elemento.firstChild) {
+                        elemento.removeChild(elemento.firstChild);
+                    }
+                }
+                var tabela = Fatorar(subtração);
+                gerarTabela(tabela);
+
                 // $('#resposta-container').append('<h3> A = ' + c + '</h3>');
                 document.getElementById('resp7').innerHTML = 'C = ' + Math.sqrt(subtração);
 
@@ -252,5 +381,9 @@ function Calculate() {
 }
 
 const multiplicatodooarray = (itens) => itens.reduce((acumulador, item) => acumulador * item);
+
+function formatarValor(valor) {
+    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 3 });
+}
 
 export default App

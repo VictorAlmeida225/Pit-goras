@@ -6,6 +6,7 @@
 }
 body{
     background-color: #d8d8d8 !important;
+    position: relative;
 }
 input[type=number]::-webkit-inner-spin-button{ 
     -webkit-appearance: none;
@@ -55,10 +56,25 @@ div .row:nth-child(2){
     color: red;
 }
 #respostas-container{
-    margin: 20px;
+    margin: 40px 0;
     text-align: center;
     width: 100%;
 }
-#fatora tr td:first-child{
+#Col-resp tr td:first-child{
     border-right: 2px solid black;
+    text-align: end;
+}
+#Col-resp tr td{
+    font-size: 1.5rem;
+    padding: 0 4px;
+    font-weight: 600;
+}
+#Col-resp{
+    margin: 40px 0;
+    -webkit-display: flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
 }
